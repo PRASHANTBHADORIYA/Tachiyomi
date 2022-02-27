@@ -103,7 +103,11 @@ class PreferencesHelper(val context: Context) {
 
     fun customBrightness() = flowPrefs.getBoolean("pref_custom_brightness_key", false)
 
+    fun landscapePadding() = flowPrefs.getBoolean("pref_landscape_Padding_key", false)
+
     fun customBrightnessValue() = flowPrefs.getInt("custom_brightness_value", 0)
+
+    fun landscapePaddingValue() = flowPrefs.getInt("landscape_Padding_Value", 0)
 
     fun colorFilter() = flowPrefs.getBoolean("pref_color_filter_key", false)
 

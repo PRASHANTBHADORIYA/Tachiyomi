@@ -649,7 +649,7 @@ class ReaderActivity : BaseRxActivity<ReaderActivityBinding, ReaderPresenter>() 
                 gravity = Gravity.CENTER
             }
         }
-        binding.readerContainer.addView(loadingIndicator)
+        binding.readerContainer?.addView(loadingIndicator)
 
         startPostponedEnterTransition()
     }
@@ -670,7 +670,7 @@ class ReaderActivity : BaseRxActivity<ReaderActivityBinding, ReaderPresenter>() 
      * hides or disables the reader prev/next buttons if there's a prev or next chapter
      */
     fun setChapters(viewerChapters: ViewerChapters) {
-        binding.readerContainer.removeView(loadingIndicator)
+        binding.readerContainer?.removeView(loadingIndicator)
         viewer?.setChapters(viewerChapters)
         binding.toolbar.subtitle = viewerChapters.currChapter.chapter.name
 
@@ -948,7 +948,7 @@ class ReaderActivity : BaseRxActivity<ReaderActivityBinding, ReaderPresenter>() 
         init {
             preferences.readerTheme().asFlow()
                 .onEach {
-                    binding.readerContainer.setBackgroundResource(
+                    binding.readerContainer?.setBackgroundResource(
                         when (preferences.readerTheme().get()) {
                             0 -> android.R.color.white
                             2 -> R.color.reader_background_dark
@@ -979,6 +979,10 @@ class ReaderActivity : BaseRxActivity<ReaderActivityBinding, ReaderPresenter>() 
 
             preferences.customBrightness().asFlow()
                 .onEach { setCustomBrightness(it) }
+                .launchIn(lifecycleScope)
+
+            preferences.landscapePadding().asFlow()
+                .onEach { setLandscapePadding(it) }
                 .launchIn(lifecycleScope)
 
             preferences.colorFilter().asFlow()
@@ -1067,6 +1071,20 @@ class ReaderActivity : BaseRxActivity<ReaderActivityBinding, ReaderPresenter>() 
         }
 
         /**
+         * Sets the landscape padding according to [enabled].
+         */
+        private fun setLandscapePadding(enabled: Boolean) {
+            if (enabled) {
+                preferences.landscapePaddingValue().asFlow()
+                    .sample(100)
+                    .onEach { setLandscapePaddingValue(it) }
+                    .launchIn(lifecycleScope)
+            } else {
+                setLandscapePaddingValue(0)
+            }
+        }
+
+        /**
          * Sets the color filter overlay according to [enabled].
          */
         private fun setColorFilter(enabled: Boolean) {
@@ -1108,6 +1126,13 @@ class ReaderActivity : BaseRxActivity<ReaderActivityBinding, ReaderPresenter>() 
             } else {
                 binding.brightnessOverlay.isVisible = false
             }
+        }
+
+        /**
+         * Sets the landscape padding [value].
+         */
+        private fun setLandscapePaddingValue(value: Int) {
+            binding.landscapeReaderContainer?.setPadding(value, 0, value, 0)
         }
 
         /**

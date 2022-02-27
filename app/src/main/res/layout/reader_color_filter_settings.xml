@@ -15,10 +15,12 @@
             android:id="@+id/custom_brightness"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
             android:text="@string/pref_custom_brightness"
             app:layout_constraintTop_toTopOf="parent" />
+
 
         <!-- Brightness value -->
 
@@ -59,20 +61,75 @@
             app:layout_constraintTop_toTopOf="@id/slider_brightness"
             tools:text="50" />
 
+        <!-- Landscape padding -->
+
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/landscape_padding"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:text="@string/landscape_padding"
+            app:layout_constraintBottom_toTopOf="@id/switch_color_filter"
+            app:layout_constraintTop_toBottomOf="@id/slider_brightness"
+            app:layout_constraintVertical_bias="0.238"
+            tools:layout_editor_absoluteX="0dp" />
+
+        <!-- Landscape padding value -->
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/txt_padding_seekbar_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="16dp"
+            android:textAppearance="?attr/textAppearanceTitleSmall"
+            android:tint="?attr/colorOnBackground"
+            app:layout_constraintBottom_toBottomOf="@id/slider_padding"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/slider_padding"
+            app:srcCompat="@drawable/ic_baseline_crop_landscape_24" />
+
+        <com.google.android.material.slider.Slider
+            android:id="@+id/slider_padding"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="48dp"
+            android:layout_marginEnd="54dp"
+            android:padding="8dp"
+            android:valueFrom="0.0"
+            android:valueTo="400.0"
+            android:stepSize="25.0"
+            app:layout_constraintTop_toBottomOf="@id/landscape_padding"
+            app:layout_constraintBottom_toTopOf="@id/switch_color_filter"
+            />
+
+        <TextView
+            android:id="@+id/txt_Landscape_seekbar_value"
+            android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:textAppearance="?attr/textAppearanceTitleSmall"
+            app:layout_constraintBottom_toBottomOf="@id/slider_padding"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/slider_padding"
+            tools:text="100" />
+
         <!-- Color filter -->
+
+        <!-- Red filter -->
 
         <com.google.android.material.switchmaterial.SwitchMaterial
             android:id="@+id/switch_color_filter"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="132dp"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
             android:text="@string/pref_custom_color_filter"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/slider_brightness" />
-
-        <!-- Red filter -->
 
         <TextView
             android:id="@+id/txt_color_filter_red_symbol"

@@ -44,15 +44,24 @@ class ReaderColorFilterSettings @JvmOverloads constructor(context: Context, attr
             .onEach { setCustomBrightness(it) }
             .launchIn(context.lifecycleScope)
 
+        preferences.landscapePadding().asFlow()
+            .onEach { setLandscapePadding(it) }
+            .launchIn(context.lifecycleScope)
+
         // Get color and update values
         val color = preferences.colorFilterValue().get()
         val brightness = preferences.customBrightnessValue().get()
+        val padding = preferences.landscapePaddingValue().get()
 
         val argb = setValues(color)
 
         // Set brightness value
         binding.txtBrightnessSeekbarValue.text = brightness.toString()
         binding.sliderBrightness.value = brightness.toFloat()
+
+        // Set padding value
+        binding.txtLandscapeSeekbarValue.text = padding.toString()
+        binding.sliderPadding.value = padding.toFloat()
 
         // Initialize seekBar progress
         binding.sliderColorFilterAlpha.value = argb[0].toFloat()
@@ -62,6 +71,7 @@ class ReaderColorFilterSettings @JvmOverloads constructor(context: Context, attr
 
         // Set listeners
         binding.switchColorFilter.bindToPreference(preferences.colorFilter())
+        binding.landscapePadding.bindToPreference(preferences.landscapePadding())
         binding.customBrightness.bindToPreference(preferences.customBrightness())
         binding.colorFilterMode.bindToPreference(preferences.colorFilterMode())
         binding.grayscale.bindToPreference(preferences.grayscale())
@@ -93,6 +103,12 @@ class ReaderColorFilterSettings @JvmOverloads constructor(context: Context, attr
                 preferences.customBrightnessValue().set(value.toInt())
             }
         }
+
+        binding.sliderPadding.addOnChangeListener { _, value, fromUser ->
+            if (fromUser) {
+                preferences.landscapePaddingValue().set(value.toInt())
+            }
+        }
     }
 
     /**
@@ -112,6 +128,14 @@ class ReaderColorFilterSettings @JvmOverloads constructor(context: Context, attr
      */
     private fun setCustomBrightnessSeekBar(enabled: Boolean) {
         binding.sliderBrightness.isEnabled = enabled
+    }
+
+    /**
+     * Set enabled status of seekBars belonging to landscape padding
+     * @param enabled value which determines if seekBar gets enabled
+     */
+    private fun setLandscapePaddingSeekBar(enabled: Boolean) {
+        binding.sliderPadding.isEnabled = enabled
     }
 
     /**
@@ -150,6 +174,22 @@ class ReaderColorFilterSettings @JvmOverloads constructor(context: Context, attr
     }
 
     /**
+     * Manages the landscape padding value subscription
+     * @param enabled determines if the subscription get (un)subscribed
+     */
+    private fun setLandscapePadding(enabled: Boolean) {
+        if (enabled) {
+            preferences.landscapePaddingValue().asFlow()
+                .sample(100)
+                .onEach { setLandscapePaddingValue(it) }
+                .launchIn((context as ReaderActivity).lifecycleScope)
+        } else {
+            setLandscapePaddingValue(0, true)
+        }
+        setLandscapePaddingSeekBar(enabled)
+    }
+
+    /**
      * Sets the brightness of the screen. Range is [-75, 100].
      * From -75 to -1 a semi-transparent black view is shown at the top with the minimum brightness.
      * From 1 to 100 it sets that value as brightness.
@@ -158,6 +198,15 @@ class ReaderColorFilterSettings @JvmOverloads constructor(context: Context, attr
     private fun setCustomBrightnessValue(value: Int, isDisabled: Boolean = false) {
         if (!isDisabled) {
             binding.txtBrightnessSeekbarValue.text = value.toString()
+        }
+    }
+
+    /**
+     * Sets the brightness of the screen. Range is [0, 400].
+     */
+    private fun setLandscapePaddingValue(value: Int, isDisabled: Boolean = false) {
+        if (!isDisabled) {
+            binding.txtLandscapeSeekbarValue.text = value.toString()
         }
     }
 
