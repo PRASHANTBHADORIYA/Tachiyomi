@@ -463,7 +463,7 @@ class MainActivity : BaseViewBindingActivity<MainActivityBinding>() {
 
         // Binding sometimes isn't actually instantiated yet somehow
         nav?.setOnItemSelectedListener(null)
-        binding?.toolbar?.setNavigationOnClickListener(null)
+        binding?.toolbar.setNavigationOnClickListener(null)
     }
 
     override fun onBackPressed() {
